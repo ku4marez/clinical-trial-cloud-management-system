@@ -1,0 +1,31 @@
+# Ignore Maven and Gradle files
+**/target/
+**/.mvn/
+**/build/
+**/.gradle/
+**/*.log
+
+# Ignore IntelliJ IDEA and Eclipse project files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# Ignore temporary files
+**/*.swp
+**/*.swo
+**/.DS_Store
+
+# Ignore environment variables
+.env
+
+# Ignore Docker-related files
+**/docker-compose.override.yml
+**/docker-compose.override.yaml
+
+# Ignore Kubernetes manifests that should not be tracked
+**/deployment/kubernetes/*.local.yaml
+
+# Ignore CI/CD artifacts
+**/jenkins_home/
