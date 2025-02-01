@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  config-server:
+    image: myrepo/config-server:latest
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    environment:
+      SPRING_CLOUD_CONFIG_SERVER_GIT_URI: "https://github.com/your-org/clinical-trial-config-repo.git"
+      CONFIG_SERVER_USER: "admin"
+      CONFIG_SERVER_PASS: "secret"
+    networks:
+      - clinical-trial-network
+
+  api-gateway:
+    image: myrepo/api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
+    networks:
+      - clinical-trial-network
+
+networks:
+  clinical-trial-network:
+    driver: bridge
