@@ -8,11 +8,17 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
+    <properties>
+        <java.version>21</java.version>
+        <spring-boot.version>3.4.0</spring-boot.version>
+        <spring-cloud.version>2024.0.0</spring-cloud.version>
+    </properties>
+
+
     <modules>
-        <module>services/user-service</module>
         <module>services/trial-service</module>
+        <module>services/eureka-server</module>
         <module>services/patient-service</module>
-        <module>services/notification-service</module>
         <module>services/document-service</module>
         <module>services/report-service</module>
         <module>services/api-gateway</module>
@@ -24,7 +30,14 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>3.1.4</version>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

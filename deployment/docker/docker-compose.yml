@@ -1,27 +1,50 @@
 version: '3.8'
+
 services:
   config-server:
-    image: myrepo/config-server:latest
+    build: ../../services/config-server
     container_name: config-server
     ports:
       - "8888:8888"
+    volumes:
+      - ../../config-repo:/config-repo
     environment:
-      SPRING_CLOUD_CONFIG_SERVER_GIT_URI: "https://github.com/your-org/clinical-trial-config-repo.git"
-      CONFIG_SERVER_USER: "admin"
-      CONFIG_SERVER_PASS: "secret"
+      SPRING_PROFILES_ACTIVE: native
+      SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS: "file:/config-repo"
+    networks:
+      - clinical-trial-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+
+  eureka-server:
+    build: ../../services/eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      config-server:
+        condition: service_healthy
     networks:
       - clinical-trial-network
 
   api-gateway:
-    image: myrepo/api-gateway:latest
+    build: ../../services/api-gateway
     container_name: api-gateway
     ports:
       - "8080:8080"
     environment:
-      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888"
+      SPRING_CONFIG_IMPORT: "configserver:http://config-server:8888"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka"
+    depends_on:
+      config-server:
+        condition: service_healthy
     networks:
       - clinical-trial-network
 
 networks:
   clinical-trial-network:
-    driver: bridge
+    name: clinical-trial-network
