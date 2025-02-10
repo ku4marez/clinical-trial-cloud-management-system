@@ -12,8 +12,8 @@
         <java.version>21</java.version>
         <spring-boot.version>3.4.0</spring-boot.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <commonlibraries.version>1.2.9</commonlibraries.version>
     </properties>
-
 
     <modules>
         <module>services/trial-service</module>
@@ -24,6 +24,14 @@
         <module>services/api-gateway</module>
         <module>services/config-server</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.ku4marez</groupId>
+            <artifactId>common-libraries</artifactId>
+            <version>${commonlibraries.version}</version>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>

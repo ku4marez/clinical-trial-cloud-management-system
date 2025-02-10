@@ -45,6 +45,19 @@ services:
     networks:
       - clinical-trial-network
 
+  patient-service-db:
+    image: postgres:15
+    container_name: patient-service-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: clinical_trials
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    networks:
+      - clinical-trial-network
+
 networks:
   clinical-trial-network:
     name: clinical-trial-network
