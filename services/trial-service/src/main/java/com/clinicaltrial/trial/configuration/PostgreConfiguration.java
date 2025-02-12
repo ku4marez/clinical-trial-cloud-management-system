@@ -1,4 +1,4 @@
-package com.clinicaltrial.patient.configuration;
+package com.clinicaltrial.trial.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -14,7 +14,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "com.clinicaltrial.patient.repository")
+@EnableJpaRepositories(basePackages = "com.clinicaltrial.trial.repository")
 public class PostgreConfiguration {
 
     @Value("${spring.datasource.url}")
@@ -35,7 +35,7 @@ public class PostgreConfiguration {
     @Bean
     public DataSource dataSource() {
         return DataSourceBuilder.create()
-                .url("jdbc:postgresql://" + datasourceUrl + ":" + datasourcePort + "/patients")
+                .url("jdbc:postgresql://" + datasourceUrl + ":" + datasourcePort + "/trials")
                 .username(username)
                 .password(password)
                 .driverClassName("org.postgresql.Driver")
