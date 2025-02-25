@@ -28,4 +28,3 @@ public class DocumentRepository {
         documentTable.deleteItem(r -> r.key(k -> k.partitionValue(documentId)));
     }
 }
-

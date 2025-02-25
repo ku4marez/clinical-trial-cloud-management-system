@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trial-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: trial-service
+  template:
+    metadata:
+      labels:
+        app: trial-service
+    spec:
+      containers:
+        - name: trial-service
+          image: myrepo/trial-service:latest
+          ports:
+            - containerPort: 8084
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "default"
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: "http://config-server:8888"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-server:8761/eureka/"

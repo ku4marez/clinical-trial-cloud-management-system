@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: config-server
+  name: api-gateway
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: config-server
+      app: api-gateway
   template:
     metadata:
       labels:
-        app: config-server
+        app: api-gateway
     spec:
       containers:
-        - name: config-server
-          image: myrepo/config-server:latest
+        - name: api-gateway
+          image: myrepo/api-gateway:latest
           ports:
-            - containerPort: 8888
+            - containerPort: 8079
           env:
-            - name: SPRING_CLOUD_CONFIG_SERVER_GIT_URI
-              value: "https://github.com/your-org/clinical-trial-config-repo.git"
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: "http://config-server:8888"
             - name: CONFIG_SERVER_USER
               valueFrom:
                 secretKeyRef:
