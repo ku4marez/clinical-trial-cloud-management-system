@@ -16,13 +16,11 @@ spec:
         - name: eureka-server
           image: myrepo/eureka-server:latest
           ports:
-            - containerPort: 8761  # The Eureka application listens on this port
+            - containerPort: 8761
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "kubernetes"
-            - name: EUREKA_CLIENT_REGISTER_WITH_EUREKA
-              value: "false"
-            - name: EUREKA_CLIENT_FETCH_REGISTRY
-              value: "false"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-server:8761/eureka"
             - name: CONFIG_SERVER_URI
-              value: "http://config-server:8888"  # Config Server inside K8s
+              value: "http://config-server:8888"

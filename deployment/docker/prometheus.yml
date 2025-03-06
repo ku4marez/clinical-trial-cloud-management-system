@@ -1,0 +1,47 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'kubernetes-patient-service'
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        regex: patient-service
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_container_port_number]
+        regex: "9100"
+        action: keep
+
+  - job_name: 'kubernetes-trial-service'
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        regex: trial-service
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_container_port_number]
+        regex: "9100"
+        action: keep
+
+  - job_name: 'kubernetes-report-service'
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        regex: report-service
+        action: keep
+      - source_labels: [__meta_kubernetes_pod_container_port_number]
+        regex: "9100"
+        action: keep
+
+  - job_name: 'kubernetes-document-service'
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [ __meta_kubernetes_pod_label_app ]
+        regex: document-service
+        action: keep
+      - source_labels: [ __meta_kubernetes_pod_container_port_number ]
+        regex: "9100"
+        action: keep

@@ -35,13 +35,117 @@ services:
     build: ../../services/api-gateway
     container_name: api-gateway
     ports:
-      - "8079:8080"
+      - "8079:8079"
     environment:
       SPRING_CONFIG_IMPORT: "configserver:http://config-server:8888"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka"
     depends_on:
       config-server:
         condition: service_healthy
+    networks:
+      - clinical-trial-network
+
+  document-service:
+    build: ../../services/document-service
+    container_name: document-service
+    ports:
+      - "8086:8086"
+    networks:
+      - clinical-trial-network
+
+  document-service-sidecar:
+    image: prom/node-exporter:latest
+    container_name: document-service-sidecar
+    ports:
+      - "9100:9100"
+    depends_on:
+      - document-service
+    networks:
+      - clinical-trial-network
+
+  patient-service:
+    build: ../../services/patient-service
+    container_name: patient-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - patient-service-db
+    networks:
+      - clinical-trial-network
+
+  patient-service-sidecar:
+    image: prom/node-exporter:latest
+    container_name: patient-service-sidecar
+    ports:
+      - "9101:9100"
+    depends_on:
+      - patient-service
+    networks:
+      - clinical-trial-network
+
+  trial-service:
+    build: ../../services/trial-service
+    container_name: trial-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - trial-service-db
+    networks:
+      - clinical-trial-network
+
+  trial-service-sidecar:
+    image: prom/node-exporter:latest
+    container_name: trial-service-sidecar
+    ports:
+      - "9102:9100"
+    depends_on:
+      - trial-service
+    networks:
+      - clinical-trial-network
+
+  report-service:
+    build: ../../services/report-service
+    container_name: report-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      - report-service-db
+    networks:
+      - clinical-trial-network
+
+  report-service-sidecar:
+    image: prom/node-exporter:latest
+    container_name: report-service-sidecar
+    ports:
+      - "9103:9100"
+    depends_on:
+      - report-service
+    networks:
+      - clinical-trial-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    networks:
+      - clinical-trial-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
     networks:
       - clinical-trial-network
 
@@ -87,3 +191,6 @@ services:
 networks:
   clinical-trial-network:
     name: clinical-trial-network
+
+volumes:
+  grafana-data:

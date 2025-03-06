@@ -18,15 +18,12 @@ spec:
           ports:
             - containerPort: 8888
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "kubernetes"
             - name: SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS
               value: "file:/workspace/config-repo"
-            - name: CONFIG_SERVER_USER
-              valueFrom:
-                secretKeyRef:
-                  name: config-server-secret
-                  key: username
-            - name: CONFIG_SERVER_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: config-server-secret
-                  key: password
+      volumes:
+        - name: config-repo-volume
+          hostPath:
+            path: /clinical-trial-cloud-management-system/config-repo
+            type: Directory
