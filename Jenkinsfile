@@ -1,8 +1,10 @@
 pipeline {
     agent any
+
     environment {
         REGISTRY = 'ku4marez'
     }
+
     stages {
         stage('Detect Changed Services') {
             steps {
@@ -41,10 +43,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.SERVICES_TO_BUILD.split(' ').each { service ->
-                        echo "Building and testing ${service}..."
-                        sh "cd services/${service} && mvn clean package -DskipTests"
-                    }
+                    sh "chmod +x scripts/setup-local-env.sh && ./scripts/setup-local-env.sh"
                 }
             }
         }
@@ -55,11 +54,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.SERVICES_TO_BUILD.split(' ').each { service ->
-                        echo "Building and pushing Docker image for ${service}..."
-                        sh "docker build -t ${REGISTRY}/myrepo:${service}-latest services/${service}"
-                        sh "docker push ${REGISTRY}/myrepo:${service}-latest"
-                    }
+                    sh "chmod +x scripts/docker-build.sh && ./scripts/docker-build.sh ${env.SERVICES_TO_BUILD}"
                 }
             }
         }
@@ -70,10 +65,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.SERVICES_TO_BUILD.split(' ').each { service ->
-                        echo "Deploying ${service} to Kubernetes..."
-                        sh "kubectl apply -f deployment/kubernetes/${service}-deployment.yaml"
-                    }
+                    sh "chmod +x scripts/deploy-k8s.sh && ./scripts/deploy-k8s.sh ${env.SERVICES_TO_BUILD}"
                 }
             }
         }
